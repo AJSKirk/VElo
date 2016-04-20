@@ -2,27 +2,27 @@ import sys, getopt, itertools
 
 class Player(object):
     def __init__(self, name):
-        self.__name = name
+        self.name = name
         self.score = 1200 # Arbitary but lines well w/ FIDE
-    def get_name():
+    def get_name(self):
         return self.name
-    def get_score():
+    def get_score(self):
         return self.score
-    def expected_score(opponent):
+    def expected_score(self, opponent):
         return 1.0 / (1 + 10 ** ((opponent.get_score() - self.score) / 400.0))
-    def play(opponent, result, k=40.0): # k=40 for rapid learning
-        self.score += k * (result - expected_score(opponent))
+    def play(self, opponent, result, k=40.0): # k=40 for rapid learning
+        self.score += k * (result - self.expected_score(opponent))
 
 def play_round(player1, player2):
     print("-------------------------------")
-    print("[1] {} ({})".format(player1.get_name(), player1.get_score()))
-    print("[2] {} ({})".format(player2.get_name(), player2.get_score()))
+    print("[1] {} ({})".format(player1.get_name(), int(player1.get_score())))
+    print("[2] {} ({})".format(player2.get_name(), int(player2.get_score())))
     win_id = raw_input("Who won? ")
-    while win_id not in (1, 2, 'q'):
+    while win_id not in ('1', '2', 'q'):
         win_id = raw_input("Please enter either a 1 or a 2, or a q to quit: ")
     if win_id == 'q':
         return 0
-    if win_id == 1:
+    if win_id == '1':
         winner = player1
         loser = player2
     else:
@@ -39,7 +39,7 @@ def main(argv):
     infile = ''
     outfile = ''
     try:
-        opts, args = getopt.getopt(argv, "hi:o:", ["ifile=", "ofile="])
+        opts, args = getopt.getopt(argv, "hi:o:", ["infile=", "outfile="])
     except getopt.GetoptError:
         print("elo.py -i <infile> -o <outfile>")
         sys.exit(2)
@@ -47,22 +47,23 @@ def main(argv):
         if opt == 'h':
             print("elo.py -i <infile> -o <outfile>")
             sys.exit()
-        elif opt in ('-i', '--ifile'):
+        elif opt in ('-i', '--infile'):
             infile = arg
-        elif opt in ('-o', '--ofile'):
-            ofile = arg
+        elif opt in ('-o', '--outfile'):
+            outfile = arg
     players = []
-    with open(ifile, 'r') as f:
+    with open(infile, 'r') as f:
         for name in f:
-            players.append(Player(name))
+            players.append(Player(name.rstrip()))
 
     for (player1, player2) in itertools.permutations(players, 2):
         if play_round(player1, player2) == 0:
             break
 
-    with open(ofile, 'w') as f:
+    with open(outfile, 'w') as f:
         for player in players:
-            f.write(player.get_name() + ',' + player.get_score())
+            f.write(player.get_name() + ',' + str(int(player.get_score())) +
+            '\n')
     return
 
 
