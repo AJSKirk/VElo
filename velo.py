@@ -1,9 +1,9 @@
 import sys, getopt, random
 
 class Player(object):
-    def __init__(self, name):
+    def __init__(self, name, score=1200): # 1200 Arbitary but lines well w/ FIDE
         self.name = name
-        self.score = 1200 # Arbitary but lines well w/ FIDE
+        self.score = score 
     def get_name(self):
         return self.name
     def get_score(self):
@@ -55,8 +55,10 @@ def main(argv):
             outfile = arg
     players = []
     with open(infile, 'r') as f:
-        for name in f:
-            players.append(Player(name.rstrip()))
+        for player in f:
+            name = player.rstrip().split(',')[0]
+            score = int(player.rstrip().split(',')[1]) if len(player.rstrip().split(',')) == 2 else 1200
+            players.append(Player(name, score))
 
     while True:
         player1, player2 = random_permutation(players, 2)
