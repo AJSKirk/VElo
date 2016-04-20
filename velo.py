@@ -1,4 +1,4 @@
-import sys, getopt, itertools
+import sys, getopt, random
 
 class Player(object):
     def __init__(self, name):
@@ -14,6 +14,7 @@ class Player(object):
         self.score += k * (result - self.expected_score(opponent))
 
 def play_round(player1, player2):
+    """Play one round between player1 and player2."""
     print("-------------------------------")
     print("[1] {} ({})".format(player1.get_name(), int(player1.get_score())))
     print("[2] {} ({})".format(player2.get_name(), int(player2.get_score())))
@@ -36,6 +37,7 @@ def play_round(player1, player2):
     return 1
 
 def main(argv):
+    """Runs on random permutations of a given input file."""
     infile = ''
     outfile = ''
     try:
@@ -56,7 +58,8 @@ def main(argv):
         for name in f:
             players.append(Player(name.rstrip()))
 
-    for (player1, player2) in itertools.permutations(players, 2):
+    while True:
+        player1, player2 = random_permutation(players, 2)
         if play_round(player1, player2) == 0:
             break
 
@@ -66,6 +69,11 @@ def main(argv):
             '\n')
     return
 
+def random_permutation(iterable, r=None): # Standard itertools recipe
+    """Random selection from itertools.permutations(iterable, r)"""
+    pool = tuple(iterable)
+    r = len(pool) if r is None else r
+    return tuple(random.sample(pool, r))
 
 if __name__ == "__main__":
     main(sys.argv[1:]) # Call on default Visiting Enki setup
