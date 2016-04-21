@@ -11,4 +11,4 @@ python velo.py -i <infile> -o <outfile>
 ```
 
 * *infile* should be a plaintext list of names, one line per name.
-* *outfile* will be a .csv file of names and scores, with no header
+* *outfile* will be a .csv file of names and scores, with header

@@ -8,6 +8,8 @@ class Player(object):
         return self.name
     def get_score(self):
         return self.score
+    def disp_score(self):
+        return str(int(round(self.score)))
     def expected_score(self, opponent):
         return 1.0 / (1 + 10 ** ((opponent.get_score() - self.score) / 400.0))
     def play(self, opponent, result, k=40.0): # k=40 for rapid learning
@@ -16,8 +18,8 @@ class Player(object):
 def play_round(player1, player2):
     """Play one round between player1 and player2."""
     print("-------------------------------")
-    print("[1] {} ({})".format(player1.get_name(), int(player1.get_score())))
-    print("[2] {} ({})".format(player2.get_name(), int(player2.get_score())))
+    print("[1] {} ({})".format(player1.get_name(), player1.disp_score()))
+    print("[2] {} ({})".format(player2.get_name(), player2.disp_score()))
     win_id = raw_input("Who won? ")
     while win_id not in ('1', '2', 'q'):
         win_id = raw_input("Please enter either a 1 or a 2, or a q to quit: ")
@@ -32,8 +34,8 @@ def play_round(player1, player2):
     winner.play(loser, 1)
     loser.play(winner, 0)
     print("New Scores:")
-    print("[1] {} ({})".format(player1.get_name(), player1.get_score()))
-    print("[2] {} ({})".format(player2.get_name(), player2.get_score()))
+    print("[1] {} ({})".format(player1.get_name(), player1.disp_score()))
+    print("[2] {} ({})".format(player2.get_name(), player2.disp_score()))
     return 1
 
 def main(argv):
@@ -66,6 +68,7 @@ def main(argv):
             break
 
     with open(outfile, 'w') as f:
+        f.write('Name,Score')
         for player in players:
             f.write(player.get_name() + ',' + str(int(player.get_score())) +
             '\n')
