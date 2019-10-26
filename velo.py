@@ -20,9 +20,9 @@ def play_round(player1, player2):
     print("-------------------------------")
     print("[1] {} ({})".format(player1.get_name(), player1.disp_score()))
     print("[2] {} ({})".format(player2.get_name(), player2.disp_score()))
-    win_id = raw_input("Who won? ")
+    win_id = input("Who won? ")
     while win_id not in ('1', '2', 'q'):
-        win_id = raw_input("Please enter either a 1 or a 2, or a q to quit: ")
+        win_id = input("Please enter either a 1 or a 2, or a q to quit: ")
     if win_id == 'q':
         return 0
     if win_id == '1':
